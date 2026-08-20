@@ -1,0 +1,43 @@
+module self_correcting_counter(
+    input clk,
+    input rst,
+    output reg [1:0] q,
+    output reg invalid_detect
+);
+
+always @(posedge clk or posedge rst) begin
+    if (rst) begin
+        q <= 2'b00;
+        invalid_detect <= 1'b0;
+    end
+    else begin
+        case (q)
+            2'b00: begin
+                q <= 2'b01;
+                invalid_detect <= 1'b0;
+            end
+
+            2'b01: begin
+                q <= 2'b10;
+                invalid_detect <= 1'b0;
+            end
+
+            2'b10: begin
+                q <= 2'b11;
+                invalid_detect <= 1'b0;
+            end
+
+            2'b11: begin
+                q <= 2'b00;
+                invalid_detect <= 1'b0;
+            end
+
+            default: begin
+                q <= 2'b00;
+                invalid_detect <= 1'b1;
+            end
+        endcase
+    end
+end
+
+endmodule
